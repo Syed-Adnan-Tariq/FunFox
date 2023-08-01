@@ -1,23 +1,54 @@
+// TaskList.js
 import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import DraggableTaskItem from './DraggableTaskItem';
+import { useDrag, useDrop } from 'react-dnd';
 
-const TaskList = ({ tasks, markAsCompleted, deleteTask }) => {
+function TaskListItem({ task, toggleTaskCompletion, deleteTask, index }) {
+  // const [, dragRef] = useDrag({
+  //   item: { type: 'TASK', id: task.id, index },
+  // });
+
+  // const [, dropRef] = useDrop({
+  //   // accept: 'TASK',
+  //   hover(item) {
+  //     if (item.id !== task.id) {
+  //       const itemIndex = item.index;
+  //       const hoverIndex = index;
+  //       toggleTaskCompletion(item.id); // Call the toggleTaskCompletion function to update the state on hover
+  //       setTimeout(() => {
+  //         toggleTaskCompletion(item.id); // Revert the task completion status after the reordering operation
+  //       }, 0);
+  //       item.index = hoverIndex;
+  //     }
+  //   },
+  // });
+
   return (
-    <DndProvider backend={HTML5Backend}>
-      <ul>
-        {tasks.map((task) => (
-          <DraggableTaskItem
-            key={task.id}
-            task={task}
-            markAsCompleted={markAsCompleted}
-            deleteTask={deleteTask}
-          />
-        ))}
-      </ul>
-    </DndProvider>
+    // ref={(node) => dragRef(dropRef(node))}
+    <div  className="task-item">
+      <h3>{task.title}</h3>
+      <p>{task.description}</p>
+      <button onClick={() => toggleTaskCompletion(task.id)}>
+        {task.completed ? 'Incomplete' : 'Complete'}
+      </button>
+      <button onClick={() => deleteTask(task.id)}>Delete</button>
+    </div>
   );
-};
+}
+
+function TaskList({ tasks, toggleTaskCompletion, deleteTask }) {
+  return (
+    <div className="task-list">
+      {tasks.map((task, index) => (
+        <TaskListItem
+          key={task.id}
+          task={task}
+          toggleTaskCompletion={toggleTaskCompletion}
+          deleteTask={deleteTask}
+          index={index}
+        />
+      ))}
+    </div>
+  );
+}
 
 export default TaskList;

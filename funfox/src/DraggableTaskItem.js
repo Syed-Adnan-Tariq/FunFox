@@ -3,10 +3,11 @@ import { useDrag } from 'react-dnd';
 import './TaskItem.css';
 
 const DraggableTaskItem = ({ task, markAsCompleted, deleteTask }) => {
-  const [, drag] = useDrag(() => ({
+  const [, drag] = useDrag({
+    // type is now listed by itself, not inside of item
     type: 'TASK',
-    item: task,
-  }));
+    item: () => ({task})
+ })
 
   const handleMarkCompleted = () => {
     markAsCompleted(task.id);
